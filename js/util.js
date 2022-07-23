@@ -5,10 +5,4 @@ function getRandomInteger(minValue, maxValue) {
     Math.floor(minValue + Math.random() * (maxValue - minValue + 1)) : -1;
 }
 
-// Функция для проверки максимальной длины строки.
-// Возвращает true, если строка проходит по длине, и false — если не проходит
-function checkStringLength(str, maxLength) {
-  return String(str).length <= maxLength;
-}
-
-export {getRandomInteger, checkStringLength};
+export {getRandomInteger};
