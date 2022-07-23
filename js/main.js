@@ -13,8 +13,24 @@ uploadFileButton.addEventListener('change', () => {
   imageEditor.show(uploadFileButton);
 }, false);
 
-form.onsubmit = function (e) {
+form.querySelector('input[name="hashtags"]').addEventListener('input', (e) => {
+  if (!ValidateForm.validateTags(e.currentTarget)) {
+    e.target.setCustomValidity('Поле заполнено некорректно!');
+  } else {
+    e.target.setCustomValidity('');
+  }
+});
+
+form.querySelector('textarea[name="description"]').addEventListener('input', (e) => {
+  if (!ValidateForm.validateComment(e.currentTarget)) {
+    e.target.setCustomValidity('Поле заполнено некорректно!');
+  } else {
+    e.target.setCustomValidity('');
+  }
+});
+
+form.addEventListener('submit', (e) => {
   if (!ValidateForm.execute(form)) {
     e.preventDefault();
   }
-};
+});
