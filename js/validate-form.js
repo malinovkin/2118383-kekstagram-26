@@ -30,8 +30,8 @@ class ValidateForm {
 
   // метод проверки формы
   static execute(form) {
-    return (ValidateForm.validateTags(form.querySelector('input[name="hashtags"]')) &&
-      (ValidateForm.validateComment(form.querySelector('textarea[name="description"]'))));
+    return (ValidateForm.validateTags(form.inputHashtags) &&
+      (ValidateForm.validateComment(form.textareaDescription)));
   }
 }
 

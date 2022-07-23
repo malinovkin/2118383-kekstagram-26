@@ -5,4 +5,8 @@ function getRandomInteger(minValue, maxValue) {
     Math.floor(minValue + Math.random() * (maxValue - minValue + 1)) : -1;
 }
 
-export {getRandomInteger};
+function isEscapeKey(event) {
+  return event.key === 'Escape';
+}
+
+export {getRandomInteger, isEscapeKey};

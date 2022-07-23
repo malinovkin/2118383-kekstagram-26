@@ -1,36 +1,18 @@
 import {generateData} from './generate-data.js';
 import {drawThumbnails} from './draw-thumbnails.js';
 import {ImageEditor} from './image-editor.js';
-import {ValidateForm} from './validate-form.js';
 
 drawThumbnails(generateData());
 
-const uploadFileButton = document.getElementById('upload-file');
 const form = document.getElementById('upload-select-image');
-const imageEditor = new ImageEditor();
+form.inputHashtags = form.querySelector('input[name="hashtags"]');
+form.textareaDescription = form.querySelector('textarea[name="description"]');
+form.uploadFileButton = document.getElementById('upload-file');
+form.imagePreview = form.querySelector('.img-upload__preview img');
+form.uploadCancelButton = document.getElementById('upload-cancel');
 
-uploadFileButton.addEventListener('change', () => {
-  imageEditor.show(uploadFileButton);
-}, false);
+const imageEditor = new ImageEditor(form);
 
-form.querySelector('input[name="hashtags"]').addEventListener('input', (e) => {
-  if (!ValidateForm.validateTags(e.currentTarget)) {
-    e.target.setCustomValidity('Поле заполнено некорректно!');
-  } else {
-    e.target.setCustomValidity('');
-  }
-});
-
-form.querySelector('textarea[name="description"]').addEventListener('input', (e) => {
-  if (!ValidateForm.validateComment(e.currentTarget)) {
-    e.target.setCustomValidity('Поле заполнено некорректно!');
-  } else {
-    e.target.setCustomValidity('');
-  }
-});
-
-form.addEventListener('submit', (e) => {
-  if (!ValidateForm.execute(form)) {
-    e.preventDefault();
-  }
+form.uploadFileButton.addEventListener('change', () => {
+  imageEditor.show(form.uploadFileButton);
 });
