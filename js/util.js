@@ -25,4 +25,46 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomInteger, isEscapeKey, showAlert};
+class MesssageDialog {
+  constructor(messageType, formShowCallback) {
+    this.messageType = messageType;
+    this.formShowCallback = formShowCallback;
+  }
+
+  // обработчик нажатия на кнопку закрытия
+  closeButtonListener() {
+    this.close();
+  }
+
+  // обработчик нажатия на кнопку клавиатуры
+  keydownListener(evt) {
+    if (isEscapeKey(evt)) {
+      this.close();
+    }
+  }
+
+  show() {
+    const template = document.querySelector(`#${this.messageType}`);
+    this.messsageDialog = template.content.cloneNode(true);
+    this.closeButton = this.messsageDialog.querySelector(`.${this.messageType}__button`);
+    const msgDialog = this;
+    this.closeButton.addEventListener('click', this.closeButtonListenerRef = function() {
+      msgDialog.closeButtonListener();
+    });
+    document.addEventListener('keydown', this.keydownListenerRef = function(evt) {
+      msgDialog.keydownListener(evt);
+    });
+    document.body.append(this.messsageDialog);
+  }
+
+  close() {
+    document.removeEventListener('keydown', this.keydownListenerRef);
+    this.closeButton.removeEventListener('click', this.closeViewerButtonListenerRef);
+    document.body.querySelector(`.${this.messageType}`).remove();
+    if (this.formShowCallback !== undefined) {
+      this.formShowCallback();
+    }
+  }
+}
+
+export {getRandomInteger, isEscapeKey, showAlert, MesssageDialog};

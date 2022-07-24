@@ -16,5 +16,5 @@ getData((images) => {
 }, showAlert);
 
 form.uploadFileButton.addEventListener('change', () => {
-  imageEditor.show(form.uploadFileButton);
+  imageEditor.load(form.uploadFileButton);
 });

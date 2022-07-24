@@ -1,6 +1,7 @@
 import {isEscapeKey} from './util.js';
 import {ValidateForm} from './validate-form.js';
 import {sendData} from './api.js';
+import {MesssageDialog} from './util.js';
 
 class ImageEditor {
   constructor(form) {
@@ -14,11 +15,13 @@ class ImageEditor {
     this.textareaDescription = document.querySelector('textarea[name="description"]');
     this.imagePreview = document.querySelector('.img-upload__preview img');
     this.uploadCancelButton = document.querySelector('#upload-cancel');
+    this.submitButton = document.querySelector('#upload-submit');
   }
 
   // обработчик нажатия на крестик
   buttonCloseListener() {
     this.close();
+    this.form.reset();
   }
 
   // обработчик редактирования масштаба
@@ -32,6 +35,7 @@ class ImageEditor {
     if (isEscapeKey(evt) && (this.inputHashtags !== document.activeElement) &&
       (this.textareaDescription !== document.activeElement)) {
       this.close();
+      this.form.reset();
     }
   }
 
@@ -42,10 +46,32 @@ class ImageEditor {
     }
   }
 
+  // установка состояния кнопки отправки
+  setSubmitButtonState(state) {
+    this.submitButton.disabled = !state;
+    this.submitButton.textContent = (state) ? 'Опубликовать' : 'Отправка...';
+  }
+
   // обработчик отправки формы
   formSubmitListener(evt) {
-    if (!ValidateForm.execute(this.form)) {
-      evt.preventDefault();
+    evt.preventDefault();
+    if (ValidateForm.validateTags(this.inputHashtags) &&
+      (ValidateForm.validateComment(this.textareaDescription))) {
+      this.setSubmitButtonState(false);
+      sendData(
+        () => {
+          this.setSubmitButtonState(true);
+          //new MesssageDialog('error').show();
+          this.close();
+          this.form.reset();
+        },
+        () => {
+          this.close();
+          new MesssageDialog('error', () => { this.show(); }).show();
+          this.setSubmitButtonState(true);
+        },
+        new FormData(evt.target)
+      );
     }
   }
 
@@ -71,18 +97,16 @@ class ImageEditor {
     this.form.removeEventListener('submit', this.formSubmitListenerRef);
     this.inputHashtags.removeEventListener('input', this.inputHashtagsInputListenerRef);
     this.textareaDescription.removeEventListener('input', this.textareaDescriptionInputListenerRef);
-    this.form.reset();
   }
 
-  // открытие редактора
-  show(image) {
+  // загрузка изображения в редактор
+  load(image) {
     const reader = new FileReader();
     const imagePreview = this.imagePreview;
     const imageEditor = this;
     reader.onload = function(evt) {
       imagePreview.src = evt.target.result;
-      imageEditor.uploadOverlay.classList.remove('hidden');
-      document.body.classList.add('modal-open');
+      imageEditor.show();
     };
     if(image.files[0]) {
       // загрузка изображения
@@ -90,6 +114,11 @@ class ImageEditor {
     }
     this.setScale(100);
     this.setEffect('none');
+  }
+
+  // открытие редактора
+  show() {
+    const imageEditor = this;
     this.uploadCancelButton.addEventListener('click', this.buttonCloseListenerRef = function() {
       imageEditor.buttonCloseListener();
     });
@@ -114,6 +143,8 @@ class ImageEditor {
     this.textareaDescription.addEventListener('input', this.textareaDescriptionRef = function(evt) {
       imageEditor.inputCheckListener(evt);
     });
+    imageEditor.uploadOverlay.classList.remove('hidden');
+    document.body.classList.add('modal-open');
   }
 
   // установка масштаба изображения
