@@ -1,7 +1,7 @@
 import {isEscapeKey} from './util.js';
 import {ValidateForm} from './validate-form.js';
 import {sendData} from './api.js';
-import {MesssageDialog} from './util.js';
+import {MesssageDialog} from './messsage-dialog.js';
 
 class ImageEditor {
   constructor(form) {
@@ -16,12 +16,20 @@ class ImageEditor {
     this.imagePreview = document.querySelector('.img-upload__preview img');
     this.uploadCancelButton = document.querySelector('#upload-cancel');
     this.submitButton = document.querySelector('#upload-submit');
+    this.setOptionsToDefault();
+  }
+
+  // сброс формы в исходное состояние
+  setOptionsToDefault() {
+    this.setScale(100);
+    this.setEffect('none');
+    this.form.reset();
   }
 
   // обработчик нажатия на крестик
   buttonCloseListener() {
     this.close();
-    this.form.reset();
+    this.setOptionsToDefault();
   }
 
   // обработчик редактирования масштаба
@@ -35,7 +43,7 @@ class ImageEditor {
     if (isEscapeKey(evt) && (this.inputHashtags !== document.activeElement) &&
       (this.textareaDescription !== document.activeElement)) {
       this.close();
-      this.form.reset();
+      this.setOptionsToDefault();
     }
   }
 
@@ -61,9 +69,9 @@ class ImageEditor {
       sendData(
         () => {
           this.setSubmitButtonState(true);
-          //new MesssageDialog('error').show();
+          new MesssageDialog('success').show();
           this.close();
-          this.form.reset();
+          this.setOptionsToDefault();
         },
         () => {
           this.close();
@@ -112,8 +120,6 @@ class ImageEditor {
       // загрузка изображения
       reader.readAsDataURL(image.files[0]);
     }
-    this.setScale(100);
-    this.setEffect('none');
   }
 
   // открытие редактора

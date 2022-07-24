@@ -27,12 +27,6 @@ class ValidateForm {
     }
     return false;
   }
-
-  // метод проверки формы
-  static execute(form) {
-    return (ValidateForm.validateTags(form.inputHashtags) &&
-      (ValidateForm.validateComment(form.textareaDescription)));
-  }
 }
 
 export {ValidateForm};
