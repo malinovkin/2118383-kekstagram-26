@@ -1,3 +1,5 @@
+import {isEscapeKey} from './util.js';
+
 class ImageViewer {
   constructor() {
     this.bigPicture = document.querySelector('.big-picture');
@@ -6,13 +8,26 @@ class ImageViewer {
     this.bigPicture.querySelector('.social__comments-loader').classList.add('hidden');
   }
 
+  // обработчик нажатия на крестик
+  closeViewerButtonListener() {
+    this.close();
+  }
+
+  // обработчик нажатия на кнопку клавиатуры
+  keydownListener(evt) {
+    if (isEscapeKey(evt)) {
+      this.close();
+    }
+  }
+
   show(image) {
     const imageViewer = this;
-    this.closeViewerListener = function() {
-      imageViewer.close();
-    };
-    document.addEventListener('keydown', this.closeViewerListener);
-    this.closeViewerButton.addEventListener('click', this.closeViewerListener);
+    this.closeViewerButton.addEventListener('click', this.closeViewerButtonListenerRef = function() {
+      imageViewer.closeViewerButtonListener();
+    });
+    document.addEventListener('keydown', this.keydownListenerRef = function(evt) {
+      imageViewer.keydownListener(evt);
+    });
     this.bigPicture.querySelector('.big-picture__img img').setAttribute('src', image.url);
     this.bigPicture.querySelector('.likes-count').textContent = image.likes;
     this.bigPicture.querySelector('.social__caption').textContent = image.description;
@@ -28,8 +43,8 @@ class ImageViewer {
   }
 
   close() {
-    document.removeEventListener('keydown', this.closeViewerListener);
-    this.closeViewerButton.removeEventListener('click', this.closeViewerListener);
+    document.removeEventListener('keydown', this.keydownListenerRef);
+    this.closeViewerButton.removeEventListener('click', this.closeViewerButtonListenerRef);
     this.bigPicture.classList.add('hidden');
     document.body.classList.remove('modal-open');
   }
