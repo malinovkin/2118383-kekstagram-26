@@ -18,7 +18,7 @@ class ImageEditor {
     this.form.uploadCancelButton.removeEventListener('click', this.buttonCloseListener);
     this.buttonScaleUp.removeEventListener('click', this.buttonScaleUpListener);
     this.buttonScaleDown.removeEventListener('click', this.buttonScaleDownListener);
-    document.body.removeEventListener('keydown', this.bodyKeydownListener);
+    document.removeEventListener('keydown', this.bodyKeydownListener);
     this.effectsList.removeEventListener('change', this.effectsChangeListener);
     this.form.removeEventListener('submit', this.formSubmitListener);
     this.form.inputHashtags.removeEventListener('input', this.inputHashtagsInputListener);
@@ -55,7 +55,7 @@ class ImageEditor {
         imageEditor.close();
       }
     };
-    document.body.addEventListener('keydown', this.bodyKeydownListener);
+    document.addEventListener('keydown', this.bodyKeydownListener);
     // событие смены эффектов
     this.effectsChangeListener = function(e) {
       if (e.target.getAttribute('name') === 'effect') {

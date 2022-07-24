@@ -11,7 +11,7 @@ class ImageViewer {
     this.closeViewerListener = function() {
       imageViewer.close();
     };
-    document.body.addEventListener('keydown', this.closeViewerListener);
+    document.addEventListener('keydown', this.closeViewerListener);
     this.closeViewerButton.addEventListener('click', this.closeViewerListener);
     this.bigPicture.querySelector('.big-picture__img img').setAttribute('src', image.url);
     this.bigPicture.querySelector('.likes-count').textContent = image.likes;
@@ -28,7 +28,7 @@ class ImageViewer {
   }
 
   close() {
-    document.body.removeEventListener('keydown', this.closeViewerListener);
+    document.removeEventListener('keydown', this.closeViewerListener);
     this.closeViewerButton.removeEventListener('click', this.closeViewerListener);
     this.bigPicture.classList.add('hidden');
     document.body.classList.remove('modal-open');
