@@ -1,18 +1,19 @@
-import {generateData} from './generate-data.js';
-import {drawThumbnails} from './draw-thumbnails.js';
+import {Thumbnails} from './thumbnails.js';
+import {ImageViewer} from './image-viewer.js';
 import {ImageEditor} from './image-editor.js';
+import {getData} from './api.js';
+import {showAlert} from './util.js';
 
-drawThumbnails(generateData());
-
-const form = document.getElementById('upload-select-image');
-form.inputHashtags = form.querySelector('input[name="hashtags"]');
-form.textareaDescription = form.querySelector('textarea[name="description"]');
-form.uploadFileButton = document.getElementById('upload-file');
-form.imagePreview = form.querySelector('.img-upload__preview img');
-form.uploadCancelButton = document.getElementById('upload-cancel');
-
+const form = document.querySelector('#upload-select-image');
+const uploadFileButton = document.querySelector('#upload-file');
 const imageEditor = new ImageEditor(form);
+const imageViewer = new ImageViewer();
 
-form.uploadFileButton.addEventListener('change', () => {
-  imageEditor.show(form.uploadFileButton);
+getData((images) => {
+  const thumbnails = new Thumbnails(imageViewer, images);
+  thumbnails.draw(images);
+}, showAlert);
+
+uploadFileButton.addEventListener('change', () => {
+  imageEditor.load(uploadFileButton.files[0]);
 });

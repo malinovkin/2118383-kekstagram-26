@@ -42,12 +42,12 @@ class Img {
   }
 }
 
-function generateData() {
+const generateData = () => {
   const images = [];
   for (let i = 1; i <= 25; i++) {
     images.push(new Img(i));
   }
   return images;
-}
+};
 
 export {generateData};
