@@ -1,4 +1,5 @@
 const ALERT_SHOW_TIME = 5000;
+const RERENDER_DELAY = 500;
 
 // Функция возвращает случайное целое число из переданного диапазона включительно.
 // Если входные данные не корректны, то функция возвращает -1
@@ -25,4 +26,25 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomInteger, isEscapeKey, showAlert};
+// Функция взята из интернета и доработана
+// Источник - https://www.freecodecamp.org/news/javascript-debounce-example
+
+function debounce (callback, timeoutDelay = RERENDER_DELAY) {
+  // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
+  // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
+  let timeoutId;
+
+  return (...rest) => {
+    // Перед каждым новым вызовом удаляем предыдущий таймаут,
+    // чтобы они не накапливались
+    clearTimeout(timeoutId);
+
+    // Затем устанавливаем новый таймаут с вызовом колбэка на ту же задержку
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+
+    // Таким образом цикл «поставить таймаут - удалить таймаут» будет выполняться,
+    // пока действие совершается чаще, чем переданная задержка timeoutDelay
+  };
+}
+
+export {getRandomInteger, isEscapeKey, showAlert, debounce};

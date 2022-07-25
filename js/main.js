@@ -9,9 +9,9 @@ form.uploadFileButton = document.querySelector('#upload-file');
 
 const imageEditor = new ImageEditor(form);
 const imageViewer = new ImageViewer();
-const thumbnails = new Thumbnails(imageViewer);
 
 getData((images) => {
+  const thumbnails = new Thumbnails(imageViewer, images);
   thumbnails.draw(images);
 }, showAlert);
 
