@@ -14,6 +14,4 @@ getData((images) => {
   thumbnails.draw(images);
 }, showAlert);
 
-uploadFileButton.addEventListener('change', () => {
-  imageEditor.load(uploadFileButton.files[0]);
-});
+uploadFileButton.addEventListener('change', () => imageEditor.load(uploadFileButton.files[0]));

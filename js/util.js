@@ -21,15 +21,13 @@ const showAlert = (message) => {
   alertContainer.style.backgroundColor = 'red';
   alertContainer.textContent = message;
   document.body.append(alertContainer);
-  setTimeout(() => {
-    alertContainer.remove();
-  }, ALERT_SHOW_TIME);
+  setTimeout(() => alertContainer.remove(), ALERT_SHOW_TIME);
 };
 
 // Функция взята из интернета и доработана
 // Источник - https://www.freecodecamp.org/news/javascript-debounce-example
 
-function debounce (callback, timeoutDelay = RERENDER_DELAY) {
+const debounce = (callback, timeoutDelay = RERENDER_DELAY) => {
   // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
   // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
   let timeoutId;
@@ -45,6 +43,6 @@ function debounce (callback, timeoutDelay = RERENDER_DELAY) {
     // Таким образом цикл «поставить таймаут - удалить таймаут» будет выполняться,
     // пока действие совершается чаще, чем переданная задержка timeoutDelay
   };
-}
+};
 
 export {getRandomInteger, isEscapeKey, showAlert, debounce};

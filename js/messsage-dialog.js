@@ -31,15 +31,11 @@ class MesssageDialog {
     const clone = template.content.cloneNode(true);
     this.closeButton = clone.querySelector(`.${this.messageType}__button`);
     const msgDialog = this;
-    this.closeButton.addEventListener('click', this.closeButtonListenerRef = function() {
-      msgDialog.closeButtonListener();
-    });
-    document.addEventListener('keydown', this.keydownListenerRef = function(evt) {
-      msgDialog.keydownListener(evt);
-    });
-    document.addEventListener('click', this.documentClickListenerRef = function(evt) {
-      msgDialog.documentClickListener(evt);
-    });
+    this.closeButton.addEventListener('click', this.closeButtonListenerRef = () =>
+      msgDialog.closeButtonListener());
+    document.addEventListener('keydown', this.keydownListenerRef = (evt) => msgDialog.keydownListener(evt));
+    document.addEventListener('click', this.documentClickListenerRef = (evt) =>
+      msgDialog.documentClickListener(evt));
     document.body.append(clone);
     this.messsageDialog = document.querySelector(`.${this.messageType}`);
   }
