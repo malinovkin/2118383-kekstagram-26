@@ -9,7 +9,7 @@ class Thumbnails {
     document.querySelectorAll('.img-filters__button').forEach((element) => {
       element.addEventListener('click', (evt) => {
         if (this.activeFilter !== evt.target) {
-          // кнопки подсвечиваем моментально
+          // кнопки подсвечиваем сразу
           this.activeFilter.classList.remove('img-filters__button--active');
           this.activeFilter = evt.target;
           this.activeFilter.classList.add('img-filters__button--active');
@@ -73,7 +73,7 @@ class Thumbnails {
       clone.querySelector('.picture__comments').textContent = image.comments.length;
       fragment.appendChild(clone);
     });
-    document.querySelector('.pictures').appendChild(fragment);
+    document.querySelector('.pictures').append(fragment);
   }
 }
 

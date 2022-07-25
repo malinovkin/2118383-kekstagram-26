@@ -108,7 +108,7 @@ class ImageEditor {
   }
 
   // загрузка изображения в редактор
-  load(image) {
+  load(imageFile) {
     const reader = new FileReader();
     const imagePreview = this.imagePreview;
     const imageEditor = this;
@@ -116,9 +116,9 @@ class ImageEditor {
       imagePreview.src = evt.target.result;
       imageEditor.show();
     };
-    if(image.files[0]) {
+    if (imageFile) {
       // загрузка изображения
-      reader.readAsDataURL(image.files[0]);
+      reader.readAsDataURL(imageFile);
     }
   }
 

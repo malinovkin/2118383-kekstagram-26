@@ -5,8 +5,7 @@ import {getData} from './api.js';
 import {showAlert} from './util.js';
 
 const form = document.querySelector('#upload-select-image');
-form.uploadFileButton = document.querySelector('#upload-file');
-
+const uploadFileButton = document.querySelector('#upload-file');
 const imageEditor = new ImageEditor(form);
 const imageViewer = new ImageViewer();
 
@@ -15,6 +14,6 @@ getData((images) => {
   thumbnails.draw(images);
 }, showAlert);
 
-form.uploadFileButton.addEventListener('change', () => {
-  imageEditor.load(form.uploadFileButton);
+uploadFileButton.addEventListener('change', () => {
+  imageEditor.load(uploadFileButton.files[0]);
 });
