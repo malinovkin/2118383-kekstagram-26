@@ -5,6 +5,8 @@ import {MesssageDialog} from './messsage-dialog.js';
 
 class ImageEditor {
   constructor(form) {
+    // поддерживаемые расширения загружаемых файлов
+    this.FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
     this.form = form;
     this.inputScale = document.querySelector('input[name=scale]');
     this.uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -109,16 +111,10 @@ class ImageEditor {
 
   // загрузка изображения в редактор
   load(imageFile) {
-    const reader = new FileReader();
-    const imagePreview = this.imagePreview;
-    const imageEditor = this;
-    reader.onload = function(evt) {
-      imagePreview.src = evt.target.result;
-      imageEditor.show();
-    };
-    if (imageFile) {
-      // загрузка изображения
-      reader.readAsDataURL(imageFile);
+    const fileName = imageFile.name.toLowerCase();
+    if (this.FILE_TYPES.some((it) => fileName.endsWith(it))) {
+      this.imagePreview.src = URL.createObjectURL(imageFile);
+      this.show();
     }
   }
 
