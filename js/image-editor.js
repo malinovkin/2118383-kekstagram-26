@@ -77,7 +77,7 @@ class ImageEditor {
         },
         () => {
           this.close();
-          new MesssageDialog('error', () => { this.show(); }).show();
+          new MesssageDialog('error', () => this.show()).show();
           this.setSubmitButtonState(true);
         },
         new FormData(evt.target)
@@ -121,30 +121,22 @@ class ImageEditor {
   // открытие редактора
   show() {
     const imageEditor = this;
-    this.uploadCancelButton.addEventListener('click', this.buttonCloseListenerRef = function() {
-      imageEditor.buttonCloseListener();
-    });
-    this.buttonScaleUp.addEventListener('click', this.buttonScaleUpListenerRef = function() {
-      imageEditor.buttonScaleUpDownListener(25);
-    });
-    this.buttonScaleDown.addEventListener('click', this.buttonScaleDownListenerRef = function() {
-      imageEditor.buttonScaleUpDownListener(-25);
-    });
-    document.addEventListener('keydown', this.keydownListenerRef = function(evt) {
-      imageEditor.keydownListener(evt);
-    });
-    this.effectsList.addEventListener('change', this.effectsChangeListenerRef = function(evt) {
-      imageEditor.effectsChangeListener(evt);
-    });
-    this.form.addEventListener('submit', this.formSubmitListenerRef = function(evt) {
-      imageEditor.formSubmitListener(evt);
-    });
-    this.inputHashtags.addEventListener('input', this.inputHashtagsInputListenerRef = function(evt) {
-      imageEditor.inputCheckListener(evt);
-    });
-    this.textareaDescription.addEventListener('input', this.textareaDescriptionRef = function(evt) {
-      imageEditor.inputCheckListener(evt);
-    });
+    this.uploadCancelButton.addEventListener('click', this.buttonCloseListenerRef = () =>
+      imageEditor.buttonCloseListener());
+    this.buttonScaleUp.addEventListener('click', this.buttonScaleUpListenerRef = () =>
+      imageEditor.buttonScaleUpDownListener(25));
+    this.buttonScaleDown.addEventListener('click', this.buttonScaleDownListenerRef = () =>
+      imageEditor.buttonScaleUpDownListener(-25));
+    document.addEventListener('keydown', this.keydownListenerRef = (evt) =>
+      imageEditor.keydownListener(evt));
+    this.effectsList.addEventListener('change', this.effectsChangeListenerRef = (evt) =>
+      imageEditor.effectsChangeListener(evt));
+    this.form.addEventListener('submit', this.formSubmitListenerRef = (evt) =>
+      imageEditor.formSubmitListener(evt));
+    this.inputHashtags.addEventListener('input', this.inputHashtagsInputListenerRef = (evt) =>
+      imageEditor.inputCheckListener(evt));
+    this.textareaDescription.addEventListener('input', this.textareaDescriptionRef = (evt) =>
+      imageEditor.inputCheckListener(evt));
     imageEditor.uploadOverlay.classList.remove('hidden');
     document.body.classList.add('modal-open');
   }

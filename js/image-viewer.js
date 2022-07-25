@@ -48,12 +48,9 @@ class ImageViewer {
 
   show(image) {
     const imageViewer = this;
-    this.closeViewerButton.addEventListener('click', this.closeViewerButtonListenerRef = function() {
-      imageViewer.closeViewerButtonListener();
-    });
-    document.addEventListener('keydown', this.keydownListenerRef = function(evt) {
-      imageViewer.keydownListener(evt);
-    });
+    this.closeViewerButton.addEventListener('click', this.closeViewerButtonListenerRef  = () =>
+      imageViewer.closeViewerButtonListener());
+    document.addEventListener('keydown', this.keydownListenerRef = (evt) => imageViewer.keydownListener(evt));
     this.bigPictureImg.setAttribute('src', image.url);
     this.bigPictureLikesCount.textContent = image.likes;
     this.bigPictureDescription.textContent = image.description;
@@ -63,9 +60,8 @@ class ImageViewer {
     this.commentsList.innerHTML = '';
     this.commentsHeaderCount.textContent = String(this.comments.length);
     this.commentsLoaderButton.classList.remove('hidden');
-    this.commentsLoaderButton.addEventListener('click', this.commentsLoaderButtonListenerRef = function() {
-      imageViewer.showNextComments();
-    });
+    this.commentsLoaderButton.addEventListener('click', this.commentsLoaderButtonListenerRef = () =>
+      imageViewer.showNextComments());
     this.showNextComments();
     this.bigPicture.classList.remove('hidden');
     document.body.classList.add('modal-open');
