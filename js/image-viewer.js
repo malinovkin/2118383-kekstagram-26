@@ -2,10 +2,17 @@ import {isEscapeKey} from './util.js';
 
 class ImageViewer {
   constructor() {
+    // максимальное количество комментариев для 1 загрузки
+    this.NUMBER_COMMENTS_TO_LOAD = 5;
     this.bigPicture = document.querySelector('.big-picture');
     this.closeViewerButton = document.querySelector('#picture-cancel');
-    this.bigPicture.querySelector('.social__comment-count').classList.add('hidden');
-    this.bigPicture.querySelector('.social__comments-loader').classList.add('hidden');
+    this.commentsHeader = this.bigPicture.querySelector('.social__comment-count');
+    this.commentsHeaderCount = this.commentsHeader.querySelector('.comments-count');
+    this.commentsList = this.bigPicture.querySelector('.social__comments');
+    this.commentsLoaderButton = this.bigPicture.querySelector('.comments-loader');
+    this.bigPictureImg = this.bigPicture.querySelector('.big-picture__img img');
+    this.bigPictureLikesCount = this.bigPicture.querySelector('.likes-count');
+    this.bigPictureDescription = this.bigPicture.querySelector('.social__caption');
   }
 
   // обработчик нажатия на крестик
@@ -20,6 +27,25 @@ class ImageViewer {
     }
   }
 
+  // показ следующей партии комментариев
+  showNextComments() {
+    let newCommentsCount = this.loadedCommentsCount + this.NUMBER_COMMENTS_TO_LOAD;
+    if (newCommentsCount >= this.comments.length) {
+      newCommentsCount = this.comments.length;
+      // скрытие кнопки загрузки следующей партии комментариев
+      this.commentsLoaderButton.classList.add('hidden');
+    }
+    for (let i = this.loadedCommentsCount; i < newCommentsCount; i++) {
+      const li = document.createElement('LI');
+      li.setAttribute('class', 'social__comment');
+      li.innerHTML = `<img class="social__picture" src="${this.comments[i].avatar}" alt="${this.comments[i].name}"
+        width="35" height="35"><p class="social__text">${this.comments[i].message}</p>`;
+      this.commentsList.append(li);
+    }
+    this.commentsHeader.firstChild.textContent = `${newCommentsCount} из `;
+    this.loadedCommentsCount = newCommentsCount;
+  }
+
   show(image) {
     const imageViewer = this;
     this.closeViewerButton.addEventListener('click', this.closeViewerButtonListenerRef = function() {
@@ -28,16 +54,19 @@ class ImageViewer {
     document.addEventListener('keydown', this.keydownListenerRef = function(evt) {
       imageViewer.keydownListener(evt);
     });
-    this.bigPicture.querySelector('.big-picture__img img').setAttribute('src', image.url);
-    this.bigPicture.querySelector('.likes-count').textContent = image.likes;
-    this.bigPicture.querySelector('.social__caption').textContent = image.description;
-    let socialComment = '';
-    image.comments.forEach((comment) => {
-      socialComment += `<li class="social__comment">
-        <img class="social__picture" src="${comment.avatar}" alt="${comment.name}" width="35" height="35">
-        <p class="social__text">${comment.message}</p></li>`;
+    this.bigPictureImg.setAttribute('src', image.url);
+    this.bigPictureLikesCount.textContent = image.likes;
+    this.bigPictureDescription.textContent = image.description;
+    // комментарии
+    this.comments = image.comments;
+    this.loadedCommentsCount = 0;
+    this.commentsList.innerHTML = '';
+    this.commentsHeaderCount.textContent = String(this.comments.length);
+    this.commentsLoaderButton.classList.remove('hidden');
+    this.commentsLoaderButton.addEventListener('click', this.commentsLoaderButtonListenerRef = function() {
+      imageViewer.showNextComments();
     });
-    this.bigPicture.querySelector('.social__comments').innerHTML = socialComment;
+    this.showNextComments();
     this.bigPicture.classList.remove('hidden');
     document.body.classList.add('modal-open');
   }
@@ -45,6 +74,7 @@ class ImageViewer {
   close() {
     document.removeEventListener('keydown', this.keydownListenerRef);
     this.closeViewerButton.removeEventListener('click', this.closeViewerButtonListenerRef);
+    this.commentsLoaderButton.removeEventListener('click', this.commentsLoaderButtonListenerRef);
     this.bigPicture.classList.add('hidden');
     document.body.classList.remove('modal-open');
   }
