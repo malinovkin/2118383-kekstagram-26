@@ -13,7 +13,7 @@ class Thumbnails {
 
   // количество случайных миниатюр
   static get RANDOM_THUMBNAILS_COUNT() {
-    return 12;
+    return 10;
   }
 
   // обработчик смены фильтра
