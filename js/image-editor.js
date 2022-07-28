@@ -49,7 +49,7 @@ class ImageEditor {
     this.setOptionsToDefault();
   }
 
-  // обработчик редактирования масштаба
+  // обработчик редактирования масштаба изображения
   buttonScaleUpDownListener(step) {
     this.setScale(this.scale + step);
   }
