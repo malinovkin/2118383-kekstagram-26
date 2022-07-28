@@ -5,60 +5,57 @@ class Thumbnails {
     this.imageViewer = imageViewer;
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
     this.allImages = allImages;
-    const thumbnails = this;
     document.querySelectorAll('.img-filters__button').forEach((element) => {
-      element.addEventListener('click', (evt) => {
-        if (this.activeFilter !== evt.target) {
-          // кнопки подсвечиваем сразу
-          this.activeFilter.classList.remove('img-filters__button--active');
-          this.activeFilter = evt.target;
-          this.activeFilter.classList.add('img-filters__button--active');
-          debounce(() => thumbnails.buttonFilterListener())();
-        }
-      });
+      element.addEventListener('click', debounce((evt) => this.buttonFilterListener(evt)));
     });
     this.activeFilter = document.querySelector('#filter-default');
   }
 
+  // количество случайных миниатюр
+  static get RANDOM_THUMBNAILS_COUNT() {
+    return 12;
+  }
+
   // обработчик смены фильтра
-  buttonFilterListener() {
-    let images;
-    switch (this.activeFilter.getAttribute('id')) {
-      case 'filter-default':
-        images = this.allImages;
-        break;
-      case 'filter-random':
-        images = [];
-        for (let i = 0; i < 10; i++) {
-          let randomValue;
-          do {
-            randomValue = getRandomInteger(0, this.allImages.length - 1);
-          } while (images.includes(this.allImages[randomValue]));
-          images.push(this.allImages[randomValue]);
-        }
-        break;
-      case 'filter-discussed':
-        images = this.allImages.slice();
-        images.sort((a, b) => {
-          if (a.comments.length > b.comments.length) {
-            return -1;
+  buttonFilterListener(evt) {
+    if (this.activeFilter !== evt.target) {
+      this.activeFilter.classList.remove('img-filters__button--active');
+      this.activeFilter = evt.target;
+      this.activeFilter.classList.add('img-filters__button--active');
+      let images;
+      switch (this.activeFilter.getAttribute('id')) {
+        case 'filter-default':
+          images = this.allImages;
+          break;
+        case 'filter-random':
+          images = [];
+          for (let i = 0; i < Thumbnails.RANDOM_THUMBNAILS_COUNT; i++) {
+            let randomValue;
+            do {
+              randomValue = getRandomInteger(0, this.allImages.length - 1);
+            } while (images.includes(this.allImages[randomValue]));
+            images.push(this.allImages[randomValue]);
           }
-          if (a.comments.length < b.comments.length) {
-            return 1;
-          }
-          // одинаковое количество комментариев
-          return 0;
-        });
+          break;
+        case 'filter-discussed':
+          images = this.allImages.slice();
+          images.sort((a, b) => b.comments.length - a.comments.length);
+      }
+      this.draw(images);
     }
-    this.draw(images);
+  }
+
+  // удаление миниатюр
+  deleteAllThumbnails() {
+    document.querySelectorAll('.picture').forEach((picture) =>
+      picture.parentNode.removeChild(picture)
+    );
   }
 
   draw(images) {
     const fragment = document.createDocumentFragment();
     const template = document.querySelector('#picture');
-    document.querySelectorAll('.picture').forEach((picture) =>
-      picture.parentNode.removeChild(picture)
-    );
+    this.deleteAllThumbnails();
     const thumbnails = this;
     images.forEach((image) => {
       const clone = template.content.cloneNode(true);

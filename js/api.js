@@ -1,5 +1,7 @@
+const SERVER_HOST = '26.javascript.pages.academy';
+
 const getData = (onSuccess, onFail) => {
-  fetch('https://26.javascript.pages.academy/kekstagram/data')
+  fetch(`https://${SERVER_HOST}/kekstagram/data`)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -14,7 +16,7 @@ const getData = (onSuccess, onFail) => {
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(
-    'https://26.javascript.pages.academy/kekstagram',
+    `https://${SERVER_HOST}/kekstagram`,
     {
       method: 'POST',
       body,

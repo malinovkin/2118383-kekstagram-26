@@ -31,11 +31,12 @@ class MesssageDialog {
     const clone = template.content.cloneNode(true);
     this.closeButton = clone.querySelector(`.${this.messageType}__button`);
     const msgDialog = this;
-    this.closeButton.addEventListener('click', this.closeButtonListenerRef = () =>
-      msgDialog.closeButtonListener());
-    document.addEventListener('keydown', this.keydownListenerRef = (evt) => msgDialog.keydownListener(evt));
-    document.addEventListener('click', this.documentClickListenerRef = (evt) =>
-      msgDialog.documentClickListener(evt));
+    this.closeButtonListenerRef = () => msgDialog.closeButtonListener();
+    this.closeButton.addEventListener('click', this.closeButtonListenerRef);
+    this.keydownListenerRef = (evt) => msgDialog.keydownListener(evt);
+    document.addEventListener('keydown', this.keydownListenerRef);
+    this.documentClickListenerRef = (evt) => msgDialog.documentClickListener(evt);
+    document.addEventListener('click', this.documentClickListenerRef);
     document.body.append(clone);
     this.messsageDialog = document.querySelector(`.${this.messageType}`);
   }
@@ -43,7 +44,7 @@ class MesssageDialog {
   close() {
     document.removeEventListener('keydown', this.keydownListenerRef);
     document.removeEventListener('click', this.documentClickListenerRef);
-    this.closeButton.removeEventListener('click', this.closeViewerButtonListenerRef);
+    this.closeButton.removeEventListener('click', this.closeButtonListenerRef);
     this.messsageDialog.parentNode.removeChild(this.messsageDialog);
     if (this.formShowCallback !== undefined) {
       this.formShowCallback();

@@ -2,8 +2,6 @@ import {isEscapeKey} from './util.js';
 
 class ImageViewer {
   constructor() {
-    // максимальное количество комментариев для 1 загрузки
-    this.NUMBER_COMMENTS_TO_LOAD = 5;
     this.bigPicture = document.querySelector('.big-picture');
     this.closeViewerButton = document.querySelector('#picture-cancel');
     this.commentsHeader = this.bigPicture.querySelector('.social__comment-count');
@@ -13,6 +11,11 @@ class ImageViewer {
     this.bigPictureImg = this.bigPicture.querySelector('.big-picture__img img');
     this.bigPictureLikesCount = this.bigPicture.querySelector('.likes-count');
     this.bigPictureDescription = this.bigPicture.querySelector('.social__caption');
+  }
+
+  // максимальное количество комментариев для 1 загрузки
+  static get NUMBER_COMMENTS_TO_LOAD() {
+    return 5;
   }
 
   // обработчик нажатия на крестик
@@ -29,7 +32,7 @@ class ImageViewer {
 
   // показ следующей партии комментариев
   showNextComments() {
-    let newCommentsCount = this.loadedCommentsCount + this.NUMBER_COMMENTS_TO_LOAD;
+    let newCommentsCount = this.loadedCommentsCount + ImageViewer.NUMBER_COMMENTS_TO_LOAD;
     if (newCommentsCount >= this.comments.length) {
       newCommentsCount = this.comments.length;
       // скрытие кнопки загрузки следующей партии комментариев
@@ -48,9 +51,10 @@ class ImageViewer {
 
   show(image) {
     const imageViewer = this;
-    this.closeViewerButton.addEventListener('click', this.closeViewerButtonListenerRef  = () =>
-      imageViewer.closeViewerButtonListener());
-    document.addEventListener('keydown', this.keydownListenerRef = (evt) => imageViewer.keydownListener(evt));
+    this.closeViewerButtonListenerRef = () => imageViewer.closeViewerButtonListener();
+    this.closeViewerButton.addEventListener('click', this.closeViewerButtonListenerRef);
+    this.keydownListenerRef = (evt) => imageViewer.keydownListener(evt);
+    document.addEventListener('keydown', this.keydownListenerRef);
     this.bigPictureImg.setAttribute('src', image.url);
     this.bigPictureLikesCount.textContent = image.likes;
     this.bigPictureDescription.textContent = image.description;
@@ -60,8 +64,8 @@ class ImageViewer {
     this.commentsList.innerHTML = '';
     this.commentsHeaderCount.textContent = String(this.comments.length);
     this.commentsLoaderButton.classList.remove('hidden');
-    this.commentsLoaderButton.addEventListener('click', this.commentsLoaderButtonListenerRef = () =>
-      imageViewer.showNextComments());
+    this.commentsLoaderButtonListenerRef = () => imageViewer.showNextComments();
+    this.commentsLoaderButton.addEventListener('click', this.commentsLoaderButtonListenerRef);
     this.showNextComments();
     this.bigPicture.classList.remove('hidden');
     document.body.classList.add('modal-open');

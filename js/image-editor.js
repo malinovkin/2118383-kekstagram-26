@@ -21,9 +21,24 @@ class ImageEditor {
     this.setOptionsToDefault();
   }
 
+  // максимальный масштаб
+  static get MAX_SCALE() {
+    return 100;
+  }
+
+  // минимальный масштаб
+  static get MIN_SCALE() {
+    return 25;
+  }
+
+  // шаг изменения масштаба
+  static get STEP_SCALE() {
+    return 25;
+  }
+
   // сброс формы в исходное состояние
   setOptionsToDefault() {
-    this.setScale(100);
+    this.setScale(ImageEditor.MAX_SCALE);
     this.setEffect('none');
     this.form.reset();
   }
@@ -106,7 +121,7 @@ class ImageEditor {
     this.effectsList.removeEventListener('change', this.effectsChangeListenerRef);
     this.form.removeEventListener('submit', this.formSubmitListenerRef);
     this.inputHashtags.removeEventListener('input', this.inputHashtagsInputListenerRef);
-    this.textareaDescription.removeEventListener('input', this.textareaDescriptionInputListenerRef);
+    this.textareaDescription.removeEventListener('input', this.textareaDescriptionRef);
   }
 
   // загрузка изображения в редактор
@@ -121,32 +136,31 @@ class ImageEditor {
   // открытие редактора
   show() {
     const imageEditor = this;
-    this.uploadCancelButton.addEventListener('click', this.buttonCloseListenerRef = () =>
-      imageEditor.buttonCloseListener());
-    this.buttonScaleUp.addEventListener('click', this.buttonScaleUpListenerRef = () =>
-      imageEditor.buttonScaleUpDownListener(25));
-    this.buttonScaleDown.addEventListener('click', this.buttonScaleDownListenerRef = () =>
-      imageEditor.buttonScaleUpDownListener(-25));
-    document.addEventListener('keydown', this.keydownListenerRef = (evt) =>
-      imageEditor.keydownListener(evt));
-    this.effectsList.addEventListener('change', this.effectsChangeListenerRef = (evt) =>
-      imageEditor.effectsChangeListener(evt));
-    this.form.addEventListener('submit', this.formSubmitListenerRef = (evt) =>
-      imageEditor.formSubmitListener(evt));
-    this.inputHashtags.addEventListener('input', this.inputHashtagsInputListenerRef = (evt) =>
-      imageEditor.inputCheckListener(evt));
-    this.textareaDescription.addEventListener('input', this.textareaDescriptionRef = (evt) =>
-      imageEditor.inputCheckListener(evt));
+    this.buttonCloseListenerRef = () => imageEditor.buttonCloseListener();
+    this.uploadCancelButton.addEventListener('click', this.buttonCloseListenerRef);
+    this.buttonScaleUpListenerRef = () => imageEditor.buttonScaleUpDownListener(ImageEditor.STEP_SCALE);
+    this.buttonScaleUp.addEventListener('click', this.buttonScaleUpListenerRef);
+    this.buttonScaleDownListenerRef = () => imageEditor.buttonScaleUpDownListener(-ImageEditor.STEP_SCALE);
+    this.buttonScaleDown.addEventListener('click', this.buttonScaleDownListenerRef);
+    this.keydownListenerRef = (evt) => imageEditor.keydownListener(evt);
+    document.addEventListener('keydown', this.keydownListenerRef);
+    this.effectsChangeListenerRef = (evt) => imageEditor.effectsChangeListener(evt);
+    this.effectsList.addEventListener('change', this.effectsChangeListenerRef);
+    this.formSubmitListenerRef = (evt) => imageEditor.formSubmitListener(evt);
+    this.form.addEventListener('submit', this.formSubmitListenerRef);
+    this.inputHashtagsInputListenerRef = (evt) => imageEditor.inputCheckListener(evt);
+    this.inputHashtags.addEventListener('input', this.inputHashtagsInputListenerRef);
+    this.textareaDescription.addEventListener('input', this.inputHashtagsInputListenerRef);
     imageEditor.uploadOverlay.classList.remove('hidden');
     document.body.classList.add('modal-open');
   }
 
   // установка масштаба изображения
   setScale(scale) {
-    if (scale < 0) {
-      this.scale = 0;
-    } else if (scale > 100) {
-      this.scale = 100;
+    if (scale < ImageEditor.MIN_SCALE) {
+      this.scale = ImageEditor.MIN_SCALE;
+    } else if (scale > ImageEditor.MAX_SCALE) {
+      this.scale = ImageEditor.MAX_SCALE;
     } else {
       this.scale = scale;
     }
