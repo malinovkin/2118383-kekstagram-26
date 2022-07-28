@@ -4,7 +4,7 @@ class ValidateForm {
     return 5;
   }
 
-  // максимальное длина комментария
+  // максимальная длина комментария
   static get MAX_COMMENT_LENGTH() {
     return 140;
   }
