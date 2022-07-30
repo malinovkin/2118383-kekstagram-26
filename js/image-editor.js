@@ -145,8 +145,8 @@ class ImageEditor {
     document.removeEventListener('keydown', this.keydownListenerRef);
     this.effectsList.removeEventListener('change', this.effectsChangeListenerRef);
     this.form.removeEventListener('submit', this.formSubmitListenerRef);
-    this.inputHashtags.removeEventListener('input', this.inputHashtagsInputListenerRef);
-    this.textareaDescription.removeEventListener('input', this.inputHashtagsInputListenerRef);
+    this.inputHashtags.removeEventListener('input', this.inputCheckListenerRef);
+    this.textareaDescription.removeEventListener('input', this.inputCheckListenerRef);
   }
 
   // загрузка изображения в редактор
@@ -173,9 +173,9 @@ class ImageEditor {
     this.effectsList.addEventListener('change', this.effectsChangeListenerRef);
     this.formSubmitListenerRef = (evt) => imageEditor.formSubmitListener(evt);
     this.form.addEventListener('submit', this.formSubmitListenerRef);
-    this.inputHashtagsInputListenerRef = (evt) => imageEditor.inputCheckListener(evt);
-    this.inputHashtags.addEventListener('input', this.inputHashtagsInputListenerRef);
-    this.textareaDescription.addEventListener('input', this.inputHashtagsInputListenerRef);
+    this.inputCheckListenerRef = (evt) => imageEditor.inputCheckListener(evt);
+    this.inputHashtags.addEventListener('input', this.inputCheckListenerRef);
+    this.textareaDescription.addEventListener('input', this.inputCheckListenerRef);
     imageEditor.uploadOverlay.classList.remove('hidden');
     document.body.classList.add('modal-open');
   }
