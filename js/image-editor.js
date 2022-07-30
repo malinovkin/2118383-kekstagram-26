@@ -18,6 +18,8 @@ class ImageEditor {
     this.imagePreview = document.querySelector('.img-upload__preview img');
     this.uploadCancelButton = document.querySelector('#upload-cancel');
     this.submitButton = document.querySelector('#upload-submit');
+    this.sliderElement = document.querySelector('.effect-level__slider');
+    this.sliderElementValue = document.querySelector('.effect-level__value');
     this.setOptionsToDefault();
   }
 
@@ -34,6 +36,29 @@ class ImageEditor {
   // шаг изменения масштаба
   static get STEP_SCALE() {
     return 25;
+  }
+
+  // настройки слайдера для эффектов
+  static getNouisliderOptions(effectName) {
+    let result;
+    switch (effectName) {
+      case 'chrome':
+        result = {range: {min: 0, max: 1}, start: 1, step: 0.1, cssTemplate: 'grayscale(%s)'};
+        break;
+      case 'sepia':
+        result = {range: {min: 0, max: 1}, start: 1, step: 0.1, cssTemplate: 'sepia(%s)'};
+        break;
+      case 'marvin':
+        result = {range: {min: 0, max: 100}, start: 100, step: 1, cssTemplate: 'invert(%s%)'};
+        break;
+      case 'phobos':
+        result = {range: {min: 0, max: 3}, start: 3, step: 0.1, cssTemplate: 'blur(%spx)'};
+        break;
+      case 'heat':
+        result = {range: {min: 1, max: 3}, start: 3, step: 0.1, cssTemplate: 'brightness(%s)'};
+        break;
+    }
+    return result;
   }
 
   // сброс формы в исходное состояние
@@ -168,11 +193,47 @@ class ImageEditor {
     this.imagePreview.style.transform = `scale(${this.scale/100})`;
   }
 
+  // обновление слайдера
+  updateNouislider(effectName) {
+    const options = ImageEditor.getNouisliderOptions(effectName);
+    this.cssTemplate = options.cssTemplate;
+    if (this.sliderElement.noUiSlider === undefined) {
+      options.connect = 'lower';
+      options.format = {
+        to: (value) => Number.isInteger(value) ? value.toFixed(0) : value.toFixed(1),
+        from: (value) => parseFloat(value)
+      };
+      noUiSlider.create(this.sliderElement, options);
+      const imageEditor = this;
+      this.sliderElement.noUiSlider.on('update', () => {
+        imageEditor.sliderElementValue.value = imageEditor.sliderElement.noUiSlider.get();
+        imageEditor.imagePreview.style.filter = imageEditor.cssTemplate.replace('%s',
+          imageEditor.sliderElementValue.value);
+      });
+      this.sliderElement.parentNode.classList.remove('hidden');
+    } else {
+      this.sliderElement.noUiSlider.updateOptions(options);
+    }
+  }
+
+  // скрытие слайдера
+  destroyNouislider() {
+    if (this.sliderElement.noUiSlider !== undefined) {
+      this.sliderElement.noUiSlider.destroy();
+      this.sliderElement.parentNode.classList.add('hidden');
+      this.imagePreview.style.filter = '';
+      this.sliderElementValue.value = '';
+    }
+  }
+
   // установка эффекта на изображение
   setEffect(effectName) {
     this.imagePreview.setAttribute('class', '');
     if (effectName !== 'none') {
       this.imagePreview.classList.add(`effects__preview--${effectName}`);
+      this.updateNouislider(effectName);
+    } else {
+      this.destroyNouislider();
     }
   }
 }
