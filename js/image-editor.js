@@ -146,7 +146,7 @@ class ImageEditor {
     this.effectsList.removeEventListener('change', this.effectsChangeListenerRef);
     this.form.removeEventListener('submit', this.formSubmitListenerRef);
     this.inputHashtags.removeEventListener('input', this.inputHashtagsInputListenerRef);
-    this.textareaDescription.removeEventListener('input', this.textareaDescriptionRef);
+    this.textareaDescription.removeEventListener('input', this.inputHashtagsInputListenerRef);
   }
 
   // загрузка изображения в редактор
